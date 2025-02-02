@@ -1,8 +1,6 @@
-enum ActionKind {
-    Walking,
-    Idle,
-    Jumping
-}
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    game.splash("created by:Gian")
+})
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     projectile = sprites.createProjectileFromSprite(img`
         . . . . . . . . . . . . . . . . 
@@ -24,19 +22,61 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         `, mySprite, 0, -140)
     mySprite.startEffect(effects.ashes)
 })
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite2, otherSprite2) {
+    scene.cameraShake(4, 200)
+    sprites.destroy(otherSprite2, effects.disintegrate, 500)
+    mySprite.startEffect(effects.fire, 200)
+    info.changeLifeBy(-1)
+})
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
     sprites.destroy(projectile)
     sprites.destroy(otherSprite, effects.disintegrate, 500)
     info.changeScoreBy(5)
 })
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
-    scene.cameraShake(4, 200)
-    sprites.destroy(otherSprite, effects.disintegrate, 500)
-    mySprite.startEffect(effects.fire, 200)
-    info.changeLifeBy(-1)
-})
 let projectile: Sprite = null
 let mySprite: Sprite = null
+class ActionKind {
+    static Walking: number
+    private ___Walking_is_set: boolean
+    private ___Walking: number
+    get Walking(): number {
+        return this.___Walking_is_set ? this.___Walking : ActionKind.Walking
+    }
+    set Walking(value: number) {
+        this.___Walking_is_set = true
+        this.___Walking = value
+    }
+    
+    static Idle: number
+    private ___Idle_is_set: boolean
+    private ___Idle: number
+    get Idle(): number {
+        return this.___Idle_is_set ? this.___Idle : ActionKind.Idle
+    }
+    set Idle(value: number) {
+        this.___Idle_is_set = true
+        this.___Idle = value
+    }
+    
+    static Jumping: number
+    private ___Jumping_is_set: boolean
+    private ___Jumping: number
+    get Jumping(): number {
+        return this.___Jumping_is_set ? this.___Jumping : ActionKind.Jumping
+    }
+    set Jumping(value: number) {
+        this.___Jumping_is_set = true
+        this.___Jumping = value
+    }
+    
+    public static __initActionKind() {
+        ActionKind.Walking = 0
+        ActionKind.Idle = 1
+        ActionKind.Jumping = 2
+    }
+    
+}
+ActionKind.__initActionKind()
 scene.setBackgroundImage(img`
     9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
     9999999999999999999999999999999999999999999999999999111111111119999999999999999999999999999999999999991111999999999999999999999999999999999999999999111111111111
